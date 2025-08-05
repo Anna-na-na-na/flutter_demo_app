@@ -1,0 +1,262 @@
+[
+    {
+        "id": "1",
+        "name": "筆記型電腦", 
+        "category": "電腦",
+        "stock": 25,
+        "image": "assets/images/laptop.png",
+        "sales": {
+            "year": 4500,
+            "month": 1200,
+            "week": 300,
+            "day": 50
+        }
+    },
+    {
+        "id": "2",
+        "name": "滑鼠", 
+        "category": "周邊設備",
+        "stock": 8,
+        "image":"assets/images/mouse.png",
+        "sales": {
+            "year": 1500,
+            "month": 400,
+            "week": 100,
+            "day": 20
+        }
+    },
+    {
+        "id": "3",
+        "name": "螢幕",
+        "category":"周邊設備", 
+        "stock": 15,
+        "image": "assets/images/monitor.png",
+        "sales": {
+            "year": 2000,
+            "month": 600,
+            "week": 150,
+            "day": 30
+        }
+    },
+    {
+        "id": "4",
+        "name": "鍵盤", 
+        "category": "周邊設備",
+        "stock": 5,
+        "image": "assets/images/keyboard.png",
+        "sales": {
+            "year": 800,
+            "month": 200,
+            "week": 50,
+            "day": 10
+        }
+    },
+    {
+        "id": "5",
+        "name": "印表機", 
+        "category": "周邊設備",
+        "stock": 0,
+        "image": "assets/images/printer.png",
+        "sales": {
+            "year": 500,
+            "month": 150,
+            "week": 30,
+            "day": 5
+        }
+    },
+    {
+        "id": "6",
+        "name": "手機", 
+        "category": "行動設備",
+        "stock": 12,
+        "image": "assets/images/smartphone.png",
+        "sales": {
+            "year": 3000,
+            "month": 800,
+            "week": 200,
+            "day": 40
+        }
+    },
+    {
+        "id": "7",
+        "name": "平板電腦", 
+        "category": "行動設備",
+        "stock": 10,
+        "image": "assets/images/tablet.png",
+        "sales": {
+            "year": 2500,
+            "month": 700,
+            "week": 180,
+            "day": 35
+        }
+    },
+    {
+        "id": "8",
+        "name": "耳機", 
+        "category": "音訊設備",
+        "stock": 20,
+        "image": "assets/images/headphones.png",
+        "sales": {
+            "year": 1800,
+            "month": 500,
+            "week": 120,
+            "day": 25
+        }
+    },
+    {
+        "id": "9",
+        "name": "USB隨身碟", 
+        "category": "儲存設備",
+        "stock": 30,
+        "image": "assets/images/usb_drive.png",
+        "sales": {
+            "year": 2200,
+            "month": 600,
+            "week": 150,
+            "day": 30
+        }
+    },
+    {
+        "id": "10",
+        "name": "外接硬碟", 
+        "category": "儲存設備",
+        "stock": 18,
+        "image": "assets/images/external_hard_drive.png",
+        "sales": {
+            "year": 1600,
+            "month": 450,
+            "week": 110,
+            "day": 22
+        }
+    },
+    {
+        "id": "11",
+        "name": "網路攝影機", 
+        "category": "攝影設備",
+        "stock": 7,
+        "image": "assets/images/webcam.png",
+        "sales": {
+            "year": 900,
+            "month": 250,
+            "week": 60,
+            "day": 12
+        }
+    },
+    {
+        "id": "12",
+        "name": "路由器", 
+        "category": "網路設備",
+        "stock": 14,
+        "image": "assets/images/router.png",
+        "sales": {
+            "year": 1300,
+            "month": 350,
+            "week": 80,
+            "day": 16
+        }
+    },
+    {
+        "id": "13",
+        "name": "電源供應器", 
+        "category": "電源設備",
+        "stock": 9,
+        "image": "assets/images/power_supply.png",
+        "sales": {
+            "year": 700,
+            "month": 200,
+            "week": 50,
+            "day": 10
+        }
+    },
+    {
+        "id": "14",
+        "name": "外接光碟機",
+        "category": "儲存設備", 
+        "stock": 3,
+        "image": "assets/images/external_cd_drive.png",
+        "sales": {
+            "year": 400,
+            "month": 100,
+            "week": 30,
+            "day": 5
+        }
+    },
+    {
+        "id": "15",
+        "name": "電腦包", 
+        "category": "配件",
+        "stock": 11,
+        "image": "assets/images/laptop_bag.png",
+        "sales": {
+            "year": 1100,
+            "month": 300,
+            "week": 70,
+            "day": 15
+        }
+    },
+    {
+        "id": "16",
+        "name": "滑鼠墊", 
+        "category": "周邊設備",
+        "stock": 22,
+        "image": "assets/images/mouse_pad.png",
+        "sales": {
+            "year": 600,
+            "month": 180,
+            "week": 40,
+            "day": 8
+        }
+    },
+    {
+        "id": "17",
+        "name": "電腦螢幕支架", 
+        "category": "周邊設備",
+        "stock": 6,
+        "image": "assets/images/monitor_stand.png",
+        "sales": {
+            "year": 500,
+            "month": 150,
+            "week": 35,
+            "day": 7
+        }
+    },
+    {
+        "id": "18",
+        "name": "鍵盤保護膜", 
+        "category": "周邊設備",
+        "stock": 4,
+        "image": "assets/images/keyboard_cover.png",
+        "sales": {
+            "year": 300,
+            "month": 80,
+            "week": 20,
+            "day": 4
+        }
+    },
+    {
+        "id": "19",
+        "name": "手機殼", 
+        "category": "行動設備",
+        "stock": 16,
+        "image": "assets/images/phone_case.png",
+        "sales": {
+            "year": 1400,
+            "month": 400,
+            "week": 90,
+            "day": 18
+        }
+    },
+    {
+        "id": "20",
+        "name": "平板電腦保護套", 
+        "category": "行動設備",
+        "stock": 13,
+        "image": "assets/images/tablet_case.png",
+        "sales": {
+            "year": 1200,
+            "month": 350,
+            "week": 80,
+            "day": 16
+        }
+    }
+]
