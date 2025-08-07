@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../localization.dart';
-import '../pages/login_page.dart';
 
 class SettingsPage extends StatefulWidget {
   final Function(Locale) onLocaleChanged;
   final Function(ThemeMode) onThemeModeChanged;
 
   const SettingsPage({
-    super.key, 
+    Key? key,
     required this.onLocaleChanged,
     required this.onThemeModeChanged,
-    });
+  }) : super(key: key);
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
@@ -21,6 +21,51 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _isDarkMode = false;
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _selectedLang = prefs.getString('language') ?? 'en';
+      _isDarkMode = prefs.getBool('darkMode') ?? false;
+    });
+  }
+
+  Future<void> _updateLanguage(String langCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language', langCode);
+    setState(() => _selectedLang = langCode);
+    widget.onLocaleChanged(Locale(langCode));
+  }
+
+  Future<void> _updateTheme(bool isDark) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('darkMode', isDark);
+    setState(() => _isDarkMode = isDark);
+    widget.onThemeModeChanged(isDark ? ThemeMode.dark : ThemeMode.light);
+  }
+
+  void _changePassword() {
+    final oldPwd = _oldPasswordController.text;
+    final newPwd = _newPasswordController.text;
+    final t = AppLocalizations.of(context)!;
+
+    if (oldPwd == '123456' && newPwd.length >= 6) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(t.translate('password_changed')),
+      ));
+      // 實際應用：應該儲存在安全儲存空間
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(t.translate('password_change_failed')),
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,82 +77,39 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            // 主題切換
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(t.translate('dark_mode'), style: TextStyle(fontWeight: FontWeight.bold)),
-                Switch(
-                  value: _isDarkMode,
-                  onChanged: (value) {
-                    setState(() => _isDarkMode = value);
-                    widget.onThemeModeChanged(
-                      value ? ThemeMode.dark : ThemeMode.light,
-                    );
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            // 語言切換
             Text(t.translate('language'), style: TextStyle(fontWeight: FontWeight.bold)),
             DropdownButton<String>(
               value: _selectedLang,
-              isExpanded: true,
               items: [
                 DropdownMenuItem(value: 'en', child: Text('English')),
                 DropdownMenuItem(value: 'zh', child: Text('中文')),
               ],
               onChanged: (value) {
-                if (value != null) {
-                  setState(() => _selectedLang = value);
-                  widget.onLocaleChanged(Locale(value));
-                }
+                if (value != null) _updateLanguage(value);
               },
             ),
-            SizedBox(height: 24),
-
-            // 修改密碼區塊
+            SizedBox(height: 20),
+            Text(t.translate('theme_mode'), style: TextStyle(fontWeight: FontWeight.bold)),
+            SwitchListTile(
+              title: Text(_isDarkMode ? t.translate('dark') : t.translate('light')),
+              value: _isDarkMode,
+              onChanged: (value) => _updateTheme(value),
+            ),
+            SizedBox(height: 20),
             Text(t.translate('change_password'), style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
             TextField(
               controller: _oldPasswordController,
-              obscureText: true,
               decoration: InputDecoration(labelText: t.translate('current_password')),
+              obscureText: true,
             ),
             TextField(
               controller: _newPasswordController,
-              obscureText: true,
               decoration: InputDecoration(labelText: t.translate('new_password')),
+              obscureText: true,
             ),
-            SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {
-                // 此處未實際驗證密碼，僅示意
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(t.translate('password_updated'))),
-                );
-                _oldPasswordController.clear();
-                _newPasswordController.clear();
-              },
-              child: Text(t.translate('save')),
-            ),
-            SizedBox(height: 24),
-
-            // 登出
-            ElevatedButton.icon(
-              icon: Icon(Icons.logout),
-              label: Text(t.translate('logout')),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => LoginPage(
-                    onLocaleChanged: widget.onLocaleChanged,
-                    onThemeModeChanged: widget.onThemeModeChanged,
-                    )),
-                );
-              },
+              onPressed: _changePassword,
+              child: Text(t.translate('update_password')),
             ),
           ],
         ),

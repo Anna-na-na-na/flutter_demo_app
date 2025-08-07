@@ -41,5 +41,11 @@
     "no_data": "No data found",
     "save": "Save",
     "logout": "Logout",
-    "password_updated": "Password updated successfully!"
+    "password_updated": "Password updated successfully!",
+    "theme_mode": "Theme Mode",
+    "light": "Light",
+    "dark": "Dark",
+    "password_change_failed": "Incorrect password or invalid new password",
+    "remember_me":"Remember me",
+    "update_password": "Update Password"
 }

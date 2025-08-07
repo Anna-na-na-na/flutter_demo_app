@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../localization.dart';
-// import 'home_page.dart';
 import 'main_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   final Function(Locale) onLocaleChanged;
   final Function(ThemeMode) onThemeModeChanged;
 
-  LoginPage({
+  const LoginPage({
     required this.onLocaleChanged,
-    required this.onThemeModeChanged});
-  
+    required this.onThemeModeChanged,
+  });
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -19,33 +20,53 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  late String selectedLang;
+  String selectedLang = 'en';
+  bool rememberMe = false;
 
   @override
   void initState() {
     super.initState();
+    _loadSavedCredentials();
+  }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final currentLang = Localizations.localeOf(context).languageCode;
+  Future<void> _loadSavedCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedEmail = prefs.getString('saved_email');
+    final savedPassword = prefs.getString('saved_password');
+
+    if (savedEmail != null && savedPassword != null) {
       setState(() {
-        selectedLang = currentLang;
+        emailController.text = savedEmail;
+        passwordController.text = savedPassword;
+        rememberMe = true;
       });
-    });
+    }
   }
 
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
+  Future<void> _saveCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (rememberMe) {
+      await prefs.setString('saved_email', emailController.text);
+      await prefs.setString('saved_password', passwordController.text);
+    } else {
+      await prefs.remove('saved_email');
+      await prefs.remove('saved_password');
+    }
   }
 
-  void _login() {
-    final email = emailController.text;
-    final password = passwordController.text;
+  void _login() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
     final t = AppLocalizations.of(context)!;
 
-    if (email == 'test@example.com' && password == '123456') {
+    // 測試用帳號
+    const String testEmail = 'test@test.com';
+    const String testPassword = '12345';
+
+    // 若為預設帳號則直接跳過 Firebase 驗證
+    if (email == testEmail && password == testPassword) {
+      await _saveCredentials();
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -55,11 +76,56 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
-      // SnackBar 建議移除或改放在 MainPage 顯示
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(t.translate('invalid_credentials'))),
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(t.translate('login_success'))));
+      return;
+    }
+
+    try {
+      // Firebase 驗證
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      await _saveCredentials();
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainPage(
+            onLocaleChanged: widget.onLocaleChanged,
+            onThemeModeChanged: widget.onThemeModeChanged,
+          ),
+        ),
       );
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(t.translate('login_success'))));
+    } on FirebaseAuthException catch (e) {
+      String errorMsg;
+      switch (e.code) {
+        case 'user-not-found':
+          errorMsg = t.translate('user_not_found');
+          break;
+        case 'wrong-password':
+          errorMsg = t.translate('wrong_password');
+          break;
+        case 'invalid-email':
+          errorMsg = t.translate('invalid_email');
+          break;
+        default:
+          errorMsg = e.message ?? t.translate('login_failed');
+      }
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMsg)));
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(t.translate('login_failed'))));
     }
   }
 
@@ -83,12 +149,22 @@ class _LoginPageState extends State<LoginPage> {
                 TextField(
                   controller: passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: t.translate('password')),
+                  decoration: InputDecoration(
+                    labelText: t.translate('password'),
+                  ),
                 ),
-                SizedBox(height: 20),
                 Row(
                   children: [
-                    Text(t.translate('language') + ':'),
+                    Checkbox(
+                      value: rememberMe,
+                      onChanged: (value) => setState(() => rememberMe = value!),
+                    ),
+                    Text(t.translate('remember_me')),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text('${t.translate('language')}:'),
                     SizedBox(width: 10),
                     DropdownButton<String>(
                       value: selectedLang,
@@ -109,17 +185,6 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: _login,
                   child: Text(t.translate('login')),
-                ),
-                SizedBox(height: 20),
-                Text(t.translate('or_login_with')),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlinedButton(onPressed: () {}, child: Text('Google')),
-                    SizedBox(width: 10),
-                    OutlinedButton(onPressed: () {}, child: Text('Apple')),
-                  ],
                 ),
               ],
             ),

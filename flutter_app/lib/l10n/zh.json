@@ -41,5 +41,11 @@
     "no_data": "查無資料",
     "save": "儲存",
     "logout": "登出",
-    "password_updated": "密碼更新成功！"
+    "password_updated": "密碼更新成功！",
+    "theme_mode": "主題模式",
+    "light": "淺色",
+    "dark": "深色",
+    "password_change_failed": "密碼不正確或新密碼無效",
+    "remember_me":"記住我",
+    "update_password": "更新密碼"
 }

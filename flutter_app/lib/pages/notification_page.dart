@@ -142,9 +142,9 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: t.translate('company')),
-            Tab(text: t.translate('department')),
-            Tab(text: t.translate('supplier')),
+            Tab(text: t.translate('company_notice')),
+            Tab(text: t.translate('department_notice')),
+            Tab(text: t.translate('supplier_notice')),
           ],
         ),
       ),
